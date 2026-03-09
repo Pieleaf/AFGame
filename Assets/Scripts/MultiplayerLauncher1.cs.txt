@@ -1,0 +1,20 @@
+﻿using UnityEngine;
+using Unity.Netcode;
+
+public class MultiplayerLauncher : MonoBehaviour
+{
+    private async void Start()
+    {
+        await MultiplayerManager.Instance.InitializationTask;
+
+        // For testing:
+        // First editor instance → Host
+        // Second editor instance → Client
+#if UNITY_EDITOR
+        if (!NetworkManager.Singleton.IsListening)
+            NetworkManager.Singleton.StartHost();
+#else
+        NetworkManager.Singleton.StartClient();
+#endif
+    }
+}

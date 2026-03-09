@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f35e1430524ff54dba5162a49974207, type: 3}
+  m_Name: OrbBackup1
+  m_EditorClassIdentifier: Assembly-CSharp::OrbBackup
+  colorSelection:
+  - color: {r: 0.28627452, g: 0.07450981, b: 0.37254903, a: 0.5529412}
+    emissionEnabled: 1
+    emissionColor: {r: 26.086721, g: 0, b: 18.816307, a: 1}
+    emissionIntensity: 0.5
+    mixPriority: 1
+  - color: {r: 0, g: 0.03181268, b: 0.4188679, a: 0.61960787}
+    emissionEnabled: 1
+    emissionColor: {r: 0.020284778, g: 0.36182874, b: 0.97735846, a: 1}
+    emissionIntensity: 1
+    mixPriority: 3
+  - color: {r: 0.066261865, g: 0.02019415, b: 0.4073878, a: 0.7882353}
+    emissionEnabled: 1
+    emissionColor: {r: 0.08371884, g: 0.0353078, b: 0.98490566, a: 1}
+    emissionIntensity: 1
+    mixPriority: 1
+  collisionColor:
+    color: {r: 0, g: 0, b: 0, a: 0.59785616}
+    emissionEnabled: 1
+    emissionColor: {r: 0.15294118, g: 0.0002521279, b: 0, a: 1}
+    emissionIntensity: 25.09
+    mixPriority: 1
