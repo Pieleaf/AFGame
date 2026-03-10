@@ -1,7 +1,13 @@
-Premise:
+# TornClaw
+
+##Trailer:
+[![Watch the trailer](https://img.youtube.com/vi/46xHJ6VbbVk/0.jpg)](https://www.youtube.com/watch?v=46xHJ6VbbVk)
+
+
+##Premise:
 Fly around as a witch on your speedy broom in the mystical mountains and collect the latent magical auras that linger in this dark, forbidden swamp. Each orb of aura you pick up is stored in a long snake tail behind you - be careful not to touch it! As you get richer, hire assistant birds that help extract more aura from these mires and upgrade your collection range to be able to farm more aura than ever before.
 
-Controls:
+##Controls:
 
 WASD 		Move
 Space		Fly Up
@@ -12,7 +18,7 @@ Mouse 	 	Free Look
 (Hold)
 
 
-System Architecture:
+#System Architecture:
 
 - Managers Singletons
 	- Game Manager (Handles orb/prey spawning and collection, stores player)
@@ -70,7 +76,7 @@ System Architecture:
 
 
 
-UI Layouts:
+##UI Layouts:
 - Start Menu
 - Pause Menu
 
