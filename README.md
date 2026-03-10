@@ -1,4 +1,4 @@
-# TornClaw
+# Aura Farmer
 
 ## Trailer:
 [![Watch the trailer](https://img.youtube.com/vi/46xHJ6VbbVk/0.jpg)](https://www.youtube.com/watch?v=46xHJ6VbbVk)
