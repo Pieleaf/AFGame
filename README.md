@@ -1,89 +1,173 @@
-# Aura Farmer
+## Aura Farmer
 
-## Trailer:
+Large-scale collection game prototype: Focused on satisfying movement feel and performance optimization with scalable object systems. Throughout, I'm exploring ways to handle thousands of moving objects efficiently while maintaining responsive flight controls.
+
+## Trailer
+
 [![Watch the trailer](https://img.youtube.com/vi/46xHJ6VbbVk/0.jpg)](https://www.youtube.com/watch?v=46xHJ6VbbVk)
 
 
-## Premise:
-Fly around as a witch on your speedy broom in the mystical mountains and collect the latent magical auras that linger in this dark, forbidden swamp. Each orb of aura you pick up is stored in a long snake tail behind you - be careful not to touch it! As you get richer, hire assistant birds that help extract more aura from these mires and upgrade your collection range to be able to farm more aura than ever before.
+# Game Overview
 
-## Controls:
+Fly through a mystical forest swamp as a witch collecting magical aura orbs.
 
-WASD 		Move
-Space		Fly Up
-Shift		Fly Down
+Collected orbs form a growing snake-like trail behind the player.
+As the trail grows, navigating without colliding with it becomes increasingly difficult.
 
-Tab 		Shop
-Mouse 	 	Free Look
-(Hold)
+Players can access the shop to:
 
-
-# System Architecture:
-
-- Managers Singletons
-	- Game Manager (Handles orb/prey spawning and collection, stores player)
-
-	- Effects Manager (Particle system effects when orbs burst)
-	- Audio Manager (Uses Audiomixer to control global SFX / Music (TBA))
-	- UI Manager (Updates text, handles UI clicks)
-
-	- Save Manager (Saves orbs collected and purchases in JSON, can choose to load at start)
-	- Shop Manager (Handle purchases, upgrades)
-	
+* Hire flying birds that generate additional aura
+* Upgrade collection radius
 
 
-	- Snake Manager (Keeps a snake tail of all collected orbs that move after player's path)
-		PathBuffer: Circular FIFO buffer that caches player's path + distances 
-	  	  with O(1) write/read to determine each orb position based on individual radius
+# Technical Highlights
+
+### Custom flight controller
+
+Aircraft-inspired flight system implemented without relying on Unity physics simulation.
+
+Features:
+
+* AnimationCurve-driven acceleration and drag
+* Quaternion-based rotation
+* Glide and tumble states
+* Smooth camera that complements the flight movement
+
+This approach provided precise gameplay control and feel tuning while keeping CPU cost low.
+
+
+### Scalable trailing snake system
+
+Collected orbs form a long chain that follows the player’s previous movement.
+
+Implementation:
+
+* Circular path buffer - first in, first out
+* Cached distance values between each point
+* Constant-time lookup for quick segment positioning
+
+This allows hundreds of orbs to follow the player smoothly with minimal overhead.
+
+
+### Large-scale object management
+
+The prototype supports 2000+ active orbs.
+
+Optimizations include:
+
+* State-based update logic
+* Selective disabling of physics and collision checks
+* Layer-based filtering for triggers
+* Event-driven visual updates
+
+
+### Efficient mass-movement system
+
+The Orb Grabber system moves many orbs toward the player simultaneously while minimizing per-object calculations.
+
+This allows the collector size to be upgraded without expensive per-frame physics interactions.
+
+
+### Procedural AI movement
+
+Flying creatures that generate aura use:
+
+* Perlin-noise-based motion
+* Containment logic to stay within a defined area
+
+This produces natural movement patterns with minimal logic.
+
+
+### Adaptive camera system
+
+The camera moves against player motion using position smoothing to keep framing stable even during fast turns and dives.
+
+
+### Save system
+
+Player upgrades and progress are stored using:
+
+* JSON serialization
+* PlayerPrefs for persistence
 
 
 
-- PlayerController (Mimics aircraft dynamics (acceleration, dynamic handling, pitch/yaw, drag/glide) with RigidBody)
-	Uses AnimationCurves to allow for tuning the gameplay feel
-	Two modes: Flying, Tumbling (spinning out of control)
+## Performance Profiling
 
-	- Player Model - Actual 3D model, separates visuals (angle, bobbing) from flying logic
+The prototype was tested with 2000+ active orbs to evaluate scalability. During development I used the Unity profiler to find bottlenecks in the code.
 
+Optimizations included:
 
-	- Collector (Wrapper for orb collection trigger)
-		- CollectorRanged (Upgradeable; pulls orbs to you as you get closer)
+- Avoiding unnecessary Update calls and disabling physics, collision checks for orbs based on state
 
-			Orb Puller (optimized to move many orbs with few calculations)
+- Used object pooling for audio sources to avoid unnecessarily recreating the components every time
 
-	- Camera Mover (Smoothly counter-moves camera according to player velocity and turning)
-		- Pivot and Camera for separate localized movement
-
-	- Audio Listener, Wind SFX (dynamic wind sound according to speed / altitude)
-		- SFX Sound Player
-
-
-	
-
-- Orb (Collectable that follows player in a snake; acts as currency)
-	Color Settings (Scriptable Object): Keeps a list of colors (+ emission) that gets randomly mixed for each orb
-
-	States: 
-		Collectable 
-		-> InSnakeHidden (searching for workable spot in snake) 
-		-> InSnake (Visible - when hit takes damager and bounces player away)
-
-	Optimization: Only updates when necessary, minimal triggers (based on layers), turns off collider when grabbed
-
-	
-- Prey Cage (Prey will try to mostly fly inside this area)
-	- Prey (Purchaseable; bird that flies around randomly and spawns orbs)
+- Using a circular path buffer to make snake position calculations O(1)
 
 
 
 
-## UI Layouts:
-- Start Menu
-- Pause Menu
+# System Architecture (Simplified)
 
-- Settings (Saves between sessions)
+Core systems are separated into **gameplay, management, and presentation layers**.
 
-- Shop Menu (Purchaseable upgrades + birds)
+```
+PlayerController
+      │
+      ▼
+ SnakeManager ──► PathBuffer
+      │
+      ▼
+     Orbs
+```
 
-- HUD (Updates collected orb count)
 
-- Tutorial (Shows controls when near witch tower)
+### Core Gameplay
+
+**PlayerController**
+
+Handles flight dynamics, player states, and interaction with the world.
+
+**SnakeManager**
+
+Maintains the collected orb chain using a circular path buffer.
+
+**Orb**
+
+State-driven collectible object with optimized update behavior.
+
+**Prey**
+
+Flying entities that generate new aura orbs.
+
+
+### Managers
+
+* GameManager — spawning and core game loop
+* ShopManager — upgrades and purchases
+* SaveManager — persistence
+* UIManager — interface updates
+* AudioManager — sound playback
+* EffectsManager — particle effects
+
+
+# Controls
+
+```
+WASD   Move
+Space  Fly Up
+Shift  Fly Down
+
+Mouse  Free look
+Tab    Open shop
+```
+
+
+# Tools & Technologies
+
+* Unity, C#
+* AnimationCurves for gameplay tuning
+* ScriptableObjects for configurable orb visuals
+* JSON serialization for save data
+* ParticleSystem effects for orb collection
+* New Unity Input System with untested controller support

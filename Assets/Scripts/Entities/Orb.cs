@@ -225,11 +225,11 @@ public class Orb : MonoBehaviour
 
     public void Collect()
     {
-        Debug.Log($"{this} ({state}): Collect()");
+        //Debug.Log($"{this} ({state}): Collect()");
         if (state == OrbState.InSnake || state == OrbState.InSnakeHidden)
             return;
 
-        Debug.Log($"{GameManager.Instance}");
+        //Debug.Log($"{GameManager.Instance}");
 
         GameManager.Instance.OrbCollected(this);
     }
@@ -270,7 +270,7 @@ public class Orb : MonoBehaviour
 
     internal void Destroy()
     {
-        Debug.Log($"{this} ({state}): Destroy()");
+        //Debug.Log($"{this} ({state}): Destroy()");
 
         EffectsManager.Instance.OrbBurst(this);
 

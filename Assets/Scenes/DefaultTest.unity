@@ -2586,8 +2586,8 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 722011519}
   - {fileID: 529708026}
+  - {fileID: 722011519}
   - {fileID: 139624125}
   - {fileID: 994616997}
   - {fileID: 225019177}
@@ -5168,11 +5168,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a01e6e6e1053e6a43a3ccde68dfb38f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
+  startWithOrbs: 0
   startWithLimbs: 0
   startWithPrey: 0
   debugSkipStartMenu: 0
   debugCollectAllOrbs: 0
   minimumOrbs: 20
+  stopSpawningIfBirds: 1
   orbPrefab: {fileID: 1646089362163888550, guid: 8f45229f175e72b488f6e4fe8a1cfd7e, type: 3}
   preyPrefab: {fileID: 3005682034177878223, guid: a1c677d00ebed0447a10143cf20708ba, type: 3}
   player: {fileID: 8359744991145319199}
@@ -9051,7 +9053,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1522901111}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.43012467, y: 0.43012467, z: 0.5612422, w: 0.5612422}
+  m_LocalRotation: {x: 0.62459993, y: 0.62459993, z: 0.33147392, w: 0.33147392}
   m_LocalPosition: {x: 0, y: -200, z: 0}
   m_LocalScale: {x: 2000, y: 2000, z: 2000}
   m_ConstrainProportionsScale: 1
@@ -9234,7 +9236,8 @@ MonoBehaviour:
   purchaseSFX: {fileID: 8300000, guid: 07bc1479dee63ea498afed08903f3083, type: 3}
   purchasePitch: 1
   purchaseVolume: 0.1
-  sfxCooldown: 0.01
+  sfxCooldown: 0.1
+  sourcesLength: 10
 --- !u!82 &1549193943
 AudioSource:
   m_ObjectHideFlags: 0

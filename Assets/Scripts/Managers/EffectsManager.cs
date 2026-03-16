@@ -44,7 +44,7 @@ public class EffectsManager : MonoBehaviour
     {
         ParticleSystem burst = MakeEffect(orbDestroyed, orb.transform.position);
 
-        Debug.Log($"OrbBurst on {orb} at {orb.transform.position} (particles: {burst != null})");
+        //Debug.Log($"OrbBurst on {orb} at {orb.transform.position} (particles: {burst != null})");
         if (burst != null)
         {
             burst.transform.localScale = orb.shrinkage * Vector3.one;

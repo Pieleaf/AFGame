@@ -41,7 +41,7 @@ public class OrbVacuum : CollectorRanged
         float attraction = maxAttraction;
         if (dist == 0f)
         {
-            Debug.Log($"{this} freezing orb {orb} at collector");
+            //Debug.Log($"{this} freezing orb {orb} at collector");
             orb.transform.position = collector.transform.position;
             return;
         }

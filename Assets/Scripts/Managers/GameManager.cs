@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set; }
 
     [Header("Debug Tools")]
+    public int startWithOrbs = 0;
     public int startWithLimbs = 0;
     public int startWithPrey = 0;
 
@@ -21,6 +22,7 @@ public class GameManager : MonoBehaviour
     [Header("Settings")]
     [Tooltip("Spawns new orbs if collectable orb count goes below this.")]
     public int minimumOrbs = 20;
+    public bool stopSpawningIfBirds = true;
 
     public Orb orbPrefab;
     public Prey preyPrefab;
@@ -55,14 +57,6 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        if (debugCollectAllOrbs)
-        {
-            foreach (var orb in GetAllCollectableOrbs())
-            {
-                orb.Collect();
-            }
-        }
-
         if (debugSkipStartMenu)
         {
             StartGame();
@@ -75,12 +69,12 @@ public class GameManager : MonoBehaviour
 
     public void OrbCollected(Orb orb)
     {
-        Debug.Log($"Orb collected: {orb}");
+        //Debug.Log($"Orb collected: {orb}");
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
         Assert.IsNotNull(orb);
         Assert.IsTrue(orb.state == OrbState.Collectable);
-        # endif
+#endif
 
         if (orb == null || orb.state != OrbState.Collectable)
             return;
@@ -90,15 +84,22 @@ public class GameManager : MonoBehaviour
         EffectsManager.Instance.OrbCollected(orb);
 
         SnakeManager.Instance.AddLimb(orb);
+        EnsureMinimumOrbs();
+    }
 
-        if (ShopManager.Instance.birdPurchases <= 0)
+    private List<Orb> EnsureMinimumOrbs()
+    {
+        var list = new List<Orb>();
+
+        if (stopSpawningIfBirds && ShopManager.Instance.birdPurchases > 0)
+            return list;
+
+        var orbsToSpawn = minimumOrbs - GetAllCollectableOrbs().Count;
+        for (int i = 0; i < orbsToSpawn; i++)
         {
-            var orbsToSpawn = minimumOrbs - GetAllCollectableOrbs().Count;
-            for (int i = 0; i < orbsToSpawn; i++)
-            {
-                SpawnOrb();
-            }
+            list.Add(SpawnOrb());
         }
+        return list;
     }
 
     public void PreyCollected(Prey prey)
@@ -186,32 +187,12 @@ public class GameManager : MonoBehaviour
 
     internal List<Orb> GetAllCollectableOrbs()
     {
-        var list = new List<Orb>();
-
-        Scene scene = SceneManager.GetActiveScene();
-        foreach (GameObject root in scene.GetRootGameObjects())
-        {
-            var foundOrbs = root.GetComponentsInChildren<Orb>();
-            foreach (var o in foundOrbs)
-            {
-                if (o.state == OrbState.Collectable)
-                    list.Add(o);
-            }
-        }
-        return list;
+        return Tools.GetComponentsInScene<Orb>();
     }
 
     internal List<Prey> GetAllPrey()
     {
-        var list = new List<Prey>();
-
-        Scene scene = SceneManager.GetActiveScene();
-        foreach (GameObject root in scene.GetRootGameObjects())
-        {
-            var foundPrey = root.GetComponentsInChildren<Prey>();
-            list.AddRange(foundPrey);
-        }
-        return list;
+        return Tools.GetComponentsInScene<Prey>();
     }
 
     internal void GivePlayerOrb()
@@ -230,10 +211,30 @@ public class GameManager : MonoBehaviour
         player.Activate();
         gameStarted = true;
 
-        for (int i = 0; i < startWithLimbs; i++)
+        var orbsInScne = GetAllCollectableOrbs();
+
+        orbsInScne.AddRange(EnsureMinimumOrbs());
+
+        for (int i = 0; i < startWithOrbs - orbsInScne.Count; i++)
+        {
+            SpawnOrb();
+        }
+
+        if (debugCollectAllOrbs)
+        {
+            foreach (var orb in GetAllCollectableOrbs())
+            {
+                orb.Collect();
+            }
+        }
+
+        var limbs = SnakeManager.Instance.snake;
+
+        for (int i = 0; i < startWithLimbs - limbs.Count; i++)
         {
             GivePlayerOrb();
         }
+
         for (int i = 0; i < startWithPrey; i++)
         {
             SpawnPrey();

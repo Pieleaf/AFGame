@@ -45,7 +45,7 @@ public class OrbGrabber : CollectorRanged
             || orb.beingGrabbed || orb.radius < 0.1f)
             return;
 
-        Debug.Log($"Grab started on {orb}");
+        //Debug.Log($"Grab started on {orb}");
 
         grabbing.Add(new GrabData { 
             orb = orb, 

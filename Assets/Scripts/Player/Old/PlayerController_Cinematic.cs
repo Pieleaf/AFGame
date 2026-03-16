@@ -34,19 +34,19 @@ public class PlayerController_Cinematic : MonoBehaviour
 
     private void Awake()
     {
-        Debug.Log($"Player Awake");
+        //Debug.Log($"Player Awake");
     }
     public void OnMove(InputValue value)
     {
         moveInput = value.Get<Vector2>();
-        Debug.Log($"Moved: {moveInput}");
-        Debug.Log($"momentum: {momentum}");
-        Debug.Log($"rotationMomentum: {rotationMomentum}");
+        //Debug.Log($"Moved: {moveInput}");
+        //Debug.Log($"momentum: {momentum}");
+        //Debug.Log($"rotationMomentum: {rotationMomentum}");
     }
     public void OnClimb(InputValue value)
     {
         climbInput = value.Get<float>();
-        Debug.Log($"Climbed: {climbInput}");
+        //Debug.Log($"Climbed: {climbInput}");
     }
 
     private void Update()
